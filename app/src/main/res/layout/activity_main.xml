@@ -2,23 +2,22 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tanjinc.viewdemo.MainActivity">
+    tools:context="com.abt.MainActivity">
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="300dp"/>
+        android:layout_height="300dp"
+        android:visibility="gone"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:orientation="horizontal">
         <Button
             android:id="@+id/play"
@@ -32,19 +31,19 @@
             android:text="Pause"/>
     </LinearLayout>
 
-    <com.tanjinc.viewdemo.BatteryView
+    <com.abt.battery.BatteryView
         android:id="@+id/battery"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:visibility="gone"
         app:inside_margin="3dp"
         app:border="4dp"
         app:mainColor="#777"
         app:chargingColor="@android:color/holo_blue_light"
         app:lowPowerColor="@android:color/holo_red_dark"
-        android:layout_below="@+id/battery2"/>
+        android:layout_below="@+id/battery2"
+        />
 
-    <com.tanjinc.viewdemo.BatteryView
+    <com.abt.battery.BatteryView
         android:id="@+id/battery2"
         android:layout_width="300dp"
         android:layout_height="100dp"
@@ -54,8 +53,6 @@
         app:mainColor="#ffff"
         app:chargingColor="@android:color/holo_green_dark"
         app:lowPowerColor="@android:color/holo_red_dark"
-        android:visibility="gone"
         />
-
 
 </RelativeLayout>

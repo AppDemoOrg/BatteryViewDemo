@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="#000000" >
+
+    <com.abt.battery.BatteryView
+        android:id="@+id/battery"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        app:inside_margin="3dp"
+        app:border="4dp"
+        app:mainColor="#777"
+        app:chargingColor="@android:color/holo_blue_light"
+        app:lowPowerColor="@android:color/holo_red_dark"
+        android:layout_below="@+id/battery2"
+
+        app:batteryBackground="@drawable/power_lowest"
+        app:batteryChargeIcon="@drawable/power_charging"
+        app:batteryLevel="@drawable/power_full"
+
+        />
+
+<!--    <com.pi.pilot.common.widget.BatteryView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/dp_6"
+        android:progress="@{toolbar.progress}"
+        app:batteryCharge="@{toolbar.isCharge}"
+        app:batteryBackground="@drawable/power_lowest"
+        app:batteryChargeIcon="@drawable/power_charging"
+        app:batteryLevel="@drawable/power_full" />-->
+
+</LinearLayout>

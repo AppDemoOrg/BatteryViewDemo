@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BatteryView">
+    <declare-styleable name="BatteryViewCustom">
         <attr name="border" format="dimension"/>
         <attr name="inside_margin" format="dimension"/>
         <attr name="radius" format="dimension"/>
