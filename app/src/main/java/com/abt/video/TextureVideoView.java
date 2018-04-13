@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by tanjincheng on 16/10/19.
  * 使用TextureView仿造VideoView
  */
 public class TextureVideoView extends TextureView implements MediaController.MediaPlayerControl {

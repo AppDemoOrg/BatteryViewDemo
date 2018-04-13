@@ -6,9 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.abt.R;
 
-/**
- * Created by pisoft on 2018/4/13.
- */
 public class BatteryActivity extends AppCompatActivity {
 
     @Override

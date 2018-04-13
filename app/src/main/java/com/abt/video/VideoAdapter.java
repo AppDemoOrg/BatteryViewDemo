@@ -13,9 +13,6 @@ import com.abt.R;
 
 import java.util.List;
 
-/**
- * Created by tanjincheng on 16/10/20.
- */
 public class VideoAdapter extends BaseAdapter {
 
     List<Uri> mVideoUris;
