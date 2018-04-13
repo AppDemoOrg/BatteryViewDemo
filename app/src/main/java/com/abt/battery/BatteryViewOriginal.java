@@ -13,6 +13,10 @@ import android.os.BatteryManager;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * 自定义电池图标
+ * 电池外框和电池内芯
+ */
 public class BatteryViewOriginal extends View {
 
     private int mMargin = 5;    //电池内芯与边框的距离

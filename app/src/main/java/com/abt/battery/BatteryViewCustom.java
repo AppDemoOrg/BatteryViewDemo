@@ -12,6 +12,10 @@ import android.view.View;
 import com.abt.R;
 import com.abt.util.ResourceUtil;
 
+/**
+ * 自定义电池图标
+ * 三张图片拼接而成
+ */
 public class BatteryViewCustom extends View {
 
 	private int mProgress = 50;
