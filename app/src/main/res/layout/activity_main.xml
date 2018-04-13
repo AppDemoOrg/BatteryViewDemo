@@ -31,7 +31,7 @@
             android:text="Pause"/>
     </LinearLayout>
 
-    <com.abt.battery.BatteryView
+    <com.abt.widget.BatteryViewOriginal2
         android:id="@+id/battery"
         android:layout_width="100dp"
         android:layout_height="50dp"
@@ -43,7 +43,7 @@
         android:layout_below="@+id/battery2"
         />
 
-    <com.abt.battery.BatteryView
+    <com.abt.widget.BatteryViewOriginal2
         android:id="@+id/battery2"
         android:layout_width="300dp"
         android:layout_height="100dp"

@@ -2,7 +2,7 @@ package com.abt;
 
 import android.app.Application;
 
-public abstract class BasicApplication extends Application {
+public class BasicApplication extends Application {
 
     private static BasicApplication sContext;
 

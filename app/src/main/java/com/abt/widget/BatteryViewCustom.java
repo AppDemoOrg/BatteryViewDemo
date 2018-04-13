@@ -1,4 +1,4 @@
-package com.abt.battery;
+package com.abt.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -34,21 +34,21 @@ public class BatteryViewCustom extends View {
 
 	public BatteryViewCustom(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		TypedArray array                   = context.obtainStyledAttributes(attrs, R.styleable.BatteryView);
-		Drawable drawable 				   = array.getDrawable(R.styleable.BatteryView_batteryBackground);
+		TypedArray array                   = context.obtainStyledAttributes(attrs, R.styleable.BatteryViewOriginal2);
+		Drawable drawable 				   = array.getDrawable(R.styleable.BatteryViewOriginal2_batteryBackground);
 		BitmapDrawable bitmapDrawable	   = null;
 		if (null != drawable) {
 			bitmapDrawable 	    		   = (BitmapDrawable) drawable;
 			mBatteryBackground 		       = bitmapDrawable.getBitmap();
 		}
 
-		drawable 						   = array.getDrawable(R.styleable.BatteryView_batteryLevel);
+		drawable 						   = array.getDrawable(R.styleable.BatteryViewOriginal2_batteryLevel);
 		if(null != drawable){
 			bitmapDrawable 	    		   = (BitmapDrawable) drawable;
 			mBatteryLevel 				   = bitmapDrawable.getBitmap();
 		}
 
-		drawable 						   = array.getDrawable(R.styleable.BatteryView_batteryChargeIcon);
+		drawable 						   = array.getDrawable(R.styleable.BatteryViewOriginal2_batteryChargeIcon);
 		if(null != drawable){
 			bitmapDrawable 	    		   = (BitmapDrawable) drawable;
 			mBatteryCharge 			       = bitmapDrawable.getBitmap();

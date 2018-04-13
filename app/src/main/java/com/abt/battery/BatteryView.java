@@ -1,175 +1,157 @@
 package com.abt.battery;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.BatteryManager;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.abt.R;
-import com.abt.util.ResourceUtil;
 
 /**
- * 自定义电池图标最终版
+ * 自定义水平\垂直电池控件
  */
 public class BatteryView extends View {
-
-    private int mMargin = 5;    //电池内芯与边框的距离
-    private int mBoder = 4;     //电池外框的宽带
-    private int mWidth = 70;    //总长
-    private int mHeight = 40;   //总高
-    private int mHeadWidth = 6;
-    private int mHeadHeight = 10;
-
-    private Bitmap mBatteryCharge;
-    private Bitmap mBatteryBackground;
-    private RectF mMainRect;
-    private RectF mHeadRect;
-
-    private float mRadius = 4f;   //圆角
-    private float mPower;
-    private boolean mIsCharging;    //是否在充电
-    private int mPowerWidth;
-    private int mPowerLeftPadding;
-    private int mPowerRightPadding;
-
-    public BatteryView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView();
-
-        TypedArray array                    = context.obtainStyledAttributes(attrs, R.styleable.BatteryView);
-        Drawable drawable                    = array.getDrawable(R.styleable.BatteryView_batteryBackground);
-        BitmapDrawable bitmapDrawable	    = null;
-
-        if (null != drawable) {
-            bitmapDrawable 	    		   = (BitmapDrawable) drawable;
-            mBatteryBackground 		       = bitmapDrawable.getBitmap();
-        }
-
-        drawable 						   = array.getDrawable(R.styleable.BatteryView_batteryChargeIcon);
-        if(null != drawable){
-            bitmapDrawable 	    		   = (BitmapDrawable) drawable;
-            mBatteryCharge 			       = bitmapDrawable.getBitmap();
-        }
-
-        array.recycle();
-        mPowerLeftPadding = ResourceUtil.getDimensionPixelOffset(R.dimen.dp_2);
-        mPowerRightPadding = ResourceUtil.getDimensionPixelOffset(R.dimen.dp_2);
-        mPowerWidth = mBatteryBackground.getWidth() - mPowerLeftPadding - mPowerRightPadding;
-    }
+    private int mPower = 100;
+    private int orientation;
+    private int width;
+    private int height;
+    private int mColor;
 
     public BatteryView(Context context) {
         super(context);
-        initView();
     }
 
-    private void initView() {
-        mHeadRect = new RectF(0, (mHeight - mHeadHeight)/2, mHeadWidth, (mHeight + mHeadHeight)/2);
-        float left = mHeadRect.width();
-        float top = mBoder;
-        float right = mWidth-mBoder;
-        float bottom = mHeight-mBoder;
-        mMainRect = new RectF(left, top, right, bottom);
+    public BatteryView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Battery);
+        mColor = typedArray.getColor(R.styleable.Battery_batteryColor, 0xFFFFFFFF);
+        orientation = typedArray.getInt(R.styleable.Battery_batteryOrientation, 0);
+        mPower = typedArray.getInt(R.styleable.Battery_batteryPower, 100);
+        width = getMeasuredWidth();
+        height = getMeasuredHeight();
+        /**
+         * recycle() :官方的解释是：回收TypedArray，以便后面重用。在调用这个函数后，你就不能再使用这个TypedArray。
+         * 在TypedArray后调用recycle主要是为了缓存。当recycle被调用后，这就说明这个对象从现在可以被重用了。
+         *TypedArray 内部持有部分数组，它们缓存在Resources类中的静态字段中，这样就不用每次使用前都需要分配内存。
+         */
+        typedArray.recycle();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        //对View上的內容进行测量后得到的View內容占据的宽度
+        width = getMeasuredWidth();
+        //对View上的內容进行测量后得到的View內容占据的高度
+        height = getMeasuredHeight();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Paint paint1 = new Paint();
-
-        //画电池头
-        paint1.setStyle(Paint.Style.FILL);  //实心
-        paint1.setColor(Color.WHITE);
-        canvas.drawRect(mHeadRect, paint1);
-
-        //画外框
-        paint1.setStyle(Paint.Style.STROKE);    //设置空心矩形
-        paint1.setStrokeWidth(mBoder);          //设置边框宽度
-        paint1.setColor(Color.WHITE);
-        canvas.drawRoundRect(mMainRect, mRadius, mRadius, paint1);
-
-        //画电池芯
-        Paint paint = new Paint();
-        if (mIsCharging) {
-            //paint.setColor(Color.GREEN);
-            canvas.drawBitmap(mBatteryCharge, 0, 0, null);
-            canvas.save();
+        //判断电池方向    horizontal: 0   vertical: 1
+        if (orientation == 0) {
+            drawHorizontalBattery(canvas);
         } else {
-            if (mPower < 0.1) {
-                paint.setColor(Color.RED);
-            } else {
-                paint.setColor(Color.WHITE);
-            }
+            drawVerticalBattery(canvas);
         }
+    }
 
-        int width   = (int) (mPower * (mMainRect.width() - mMargin*2));
-        int left    = (int) (mMainRect.right - mMargin - width);
-        int right   = (int) (mMainRect.right - mMargin);
-        int top     = (int) (mMainRect.top + mMargin);
-        int bottom  = (int) (mMainRect.bottom - mMargin);
-        Rect rect = new Rect(left,top,right, bottom);
+    /**
+     * 绘制水平电池
+     * @param canvas
+     */
+    private void drawHorizontalBattery(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(mColor);
+        paint.setStyle(Paint.Style.STROKE);
+        float strokeWidth = width / 20.f;
+        float strokeWidth_2 = strokeWidth / 2;
+        paint.setStrokeWidth(strokeWidth);
+        RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2, height - strokeWidth_2);
+        //设置外边框颜色为黑色
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(r1, paint);
+        paint.setStrokeWidth(0);
+        paint.setStyle(Paint.Style.FILL);
+        //画电池内矩形电量
+        float offset = (width - strokeWidth * 2) * mPower / 100.f;
+        RectF r2 = new RectF(strokeWidth, strokeWidth + 1, offset, height - strokeWidth + 1);
+        //根据电池电量决定电池内矩形电量颜色
+        if (mPower < 30) {
+            paint.setColor(Color.RED);
+        }
+        if (mPower >= 30 && mPower < 50) {
+            paint.setColor(Color.BLUE);
+        }
+        if (mPower >= 50) {
+            paint.setColor(Color.GREEN);
+        }
+        canvas.drawRect(r2, paint);
+        //画电池头
+        RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
+        //设置电池头颜色为黑色
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(r3, paint);
+    }
+
+    /**
+     * 绘制垂直电池
+     *
+     * @param canvas
+     */
+    private void drawVerticalBattery(Canvas canvas) {
+        Paint paint = new Paint();
+        paint.setColor(mColor);
+        paint.setStyle(Paint.Style.STROKE);
+        float strokeWidth = height / 20.0f;
+        float strokeWidth2 = strokeWidth / 2;
+        paint.setStrokeWidth(strokeWidth);
+        int headHeight = (int) (strokeWidth + 0.5f);
+        RectF rect = new RectF(strokeWidth2, headHeight + strokeWidth2, width - strokeWidth2, height - strokeWidth2);
         canvas.drawRect(rect, paint);
+        paint.setStrokeWidth(0);
+        float topOffset = (height - headHeight - strokeWidth) * (100 - mPower) / 100.0f;
+        RectF rect2 = new RectF(strokeWidth, headHeight + strokeWidth + topOffset, width - strokeWidth, height - strokeWidth);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(rect2, paint);
+        RectF headRect = new RectF(width / 4.0f, 0, width * 0.75f, headHeight);
+        canvas.drawRect(headRect, paint);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
-        int width = widthSize;
-        int height = heightSize;
-        if (MeasureSpec.AT_MOST == widthMode) {
-            width = mBatteryBackground.getWidth();
+    /**
+     * 设置电池电量
+     *
+     * @param power
+     */
+    public void setPower(int power) {
+        this.mPower = power;
+        if (mPower < 0) {
+            mPower = 100;
         }
-        if (MeasureSpec.AT_MOST == heightMode) {
-            height = mBatteryBackground.getHeight();
-        }
-        setMeasuredDimension(width, height);
-        //setMeasuredDimension(mWidth, mHeight);
+        invalidate();//刷新VIEW
     }
 
-    private void setPower(float power) {
-        mPower = power;
+    /**
+     * 设置电池颜色
+     *
+     * @param color
+     */
+    public void setColor(int color) {
+        this.mColor = color;
         invalidate();
     }
 
-    private BroadcastReceiver mPowerConnectionReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-            mIsCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL;
-
-            int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-            int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-            setPower(((float) level)/scale);
-        }
-    };
-
-    @Override
-    protected void onAttachedToWindow() {
-        getContext().registerReceiver(mPowerConnectionReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        getContext().unregisterReceiver(mPowerConnectionReceiver);
-        super.onDetachedFromWindow();
+    /**
+     * 获取电池电量
+     *
+     * @return
+     */
+    public int getPower() {
+        return mPower;
     }
 }

@@ -1,4 +1,4 @@
-package com.abt.battery;
+package com.abt.widget;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
