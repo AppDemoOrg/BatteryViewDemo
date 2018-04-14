@@ -14,7 +14,9 @@ import android.view.View;
 import com.abt.R;
 
 /**
- * 自定义水平电池控件
+ * @描述： @自定义水平电池控件
+ * @作者： @黄卫旗
+ * @创建时间： @2018-04-14
  */
 public class BatteryView extends View {
 
@@ -48,15 +50,6 @@ public class BatteryView extends View {
          */
         typedArray.recycle();
     }
-
-    /*@Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //对View上的內容进行测量后得到的View內容占据的宽度
-        mWidth = getMeasuredWidth();
-        //对View上的內容进行测量后得到的View內容占据的高度
-        mHeight = getMeasuredHeight();
-    }*/
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -101,30 +94,20 @@ public class BatteryView extends View {
         float strokeWidth = mWidth / 20.f;
         paint.setStrokeWidth(strokeWidth);
 
-
         //画外边框
         canvas.drawBitmap(mBatteryBackground, 0, 0, null);  // 将bitmap绘制到画布上
-        /*RectF r1 = new RectF(strokeWidth/2, strokeWidth/2, mWidth - strokeWidth, mHeight - strokeWidth/2);
-        paint.setColor(Color.BLACK);//设置颜色为黑色
-        canvas.drawRoundRect(r1, 2, 2, paint);*/
 
         //画电池内矩形电量
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
         float offset = (mWidth - strokeWidth * 2) * mPower / 100.f;
         RectF rect= new RectF(strokeWidth + 2, strokeWidth + 2, offset, mHeight - strokeWidth - 2);
-        //RectF rect= new RectF( 2,  2, offset, mHeight - 2);
         if (mPower < 20) {
             paint.setColor(Color.RED);
         } else {
             paint.setColor(Color.BLACK);
         }
         canvas.drawRect(rect, paint);//根据电池电量决定电池内矩形电量颜色
-
-        //画电池头
-        /*RectF r3 = new RectF(mWidth - strokeWidth, mHeight * 0.25f, mWidth, mHeight * 0.75f);
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(r3, paint);//设置电池头颜色为黑色*/
     }
 
     /**
@@ -137,6 +120,7 @@ public class BatteryView extends View {
 
     public void setCharging(boolean charging) {
         this.mCharging = charging;
+        invalidate();
     }
 
     /**
@@ -145,6 +129,8 @@ public class BatteryView extends View {
     public void setPower(int power) {
         this.mPower = power;
         if (mPower < 0) {
+            mPower = 0;
+        } else if (mPower > 100) {
             mPower = 100;
         }
         invalidate();//刷新VIEW
