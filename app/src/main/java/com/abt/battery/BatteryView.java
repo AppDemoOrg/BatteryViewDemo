@@ -118,7 +118,7 @@ public class BatteryView extends View {
         invalidate();
     }
 
-    public void setCharging(boolean charging) {
+    public void setBatteryCharge(boolean charging) {
         this.mCharging = charging;
         invalidate();
     }
@@ -126,7 +126,7 @@ public class BatteryView extends View {
     /**
      * 设置电池电量
      */
-    public void setPower(int power) {
+    public void setProgress(int power) {
         this.mPower = power;
         if (mPower < 0) {
             mPower = 0;

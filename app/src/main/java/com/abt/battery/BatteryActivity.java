@@ -3,13 +3,8 @@ package com.abt.battery;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 
 import com.abt.R;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class BatteryActivity extends Activity {
 
@@ -28,7 +23,7 @@ public class BatteryActivity extends Activity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 0:
-                    horizontalBattery.setPower(power += 5);
+                    horizontalBattery.setProgress(power += 5);
                     if (power == 100) {
                         power = 0;
                     }
@@ -49,8 +44,8 @@ public class BatteryActivity extends Activity {
 
         horizontalBattery = (BatteryView) findViewById(R.id.horizontalBattery);
         horizontalBattery.setColor(Color.BLACK);
-        horizontalBattery.setPower(21);
-        horizontalBattery.setCharging(false);
+        horizontalBattery.setProgress(21);
+        horizontalBattery.setBatteryCharge(false);
     }
 /*        new Timer().schedule(new TimerTask() {
             @Override
@@ -62,7 +57,7 @@ public class BatteryActivity extends Activity {
 
 /*        verticalBattery = (BatteryView) findViewById(R.id.verticalBattery);
         verticalBattery.setColor(Color.BLACK);
-        verticalBattery.setPower(85);
+        verticalBattery.setProgress(85);
     }*/
 
 }
