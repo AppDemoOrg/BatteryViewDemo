@@ -100,7 +100,7 @@ public class BatteryView extends View {
         //画电池内矩形电量
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
-        float offset = (mWidth - strokeWidth * 2) * mPower / 100.f;
+        float offset = (mWidth - strokeWidth * 2.5f) * mPower / 100.f;
         if (offset == 0) {
             offset = strokeWidth + 2; // 最小偏移量
         }

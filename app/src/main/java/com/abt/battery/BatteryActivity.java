@@ -44,8 +44,8 @@ public class BatteryActivity extends Activity {
 
         horizontalBattery = (BatteryView) findViewById(R.id.horizontalBattery);
         horizontalBattery.setColor(Color.BLACK);
-        horizontalBattery.setProgress(21);
-        horizontalBattery.setBatteryCharge(true);
+        horizontalBattery.setProgress(100);
+        horizontalBattery.setBatteryCharge(false);
     }
 /*        new Timer().schedule(new TimerTask() {
             @Override
