@@ -101,6 +101,9 @@ public class BatteryView extends View {
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
         float offset = (mWidth - strokeWidth * 2) * mPower / 100.f;
+        if (offset == 0) {
+            offset = strokeWidth + 2; // 最小偏移量
+        }
         RectF rect= new RectF(strokeWidth + 2, strokeWidth + 2, offset, mHeight - strokeWidth - 2);
         if (mPower < 20) {
             paint.setColor(Color.RED);
