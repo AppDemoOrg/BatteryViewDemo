@@ -1,7 +1,7 @@
 package com.abt;
 
+import android.app.Activity;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,7 +15,7 @@ import com.abt.video.VideoAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener{
     TextureVideoView mVideoView;
 
     ListView mListView;

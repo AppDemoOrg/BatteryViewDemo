@@ -2,6 +2,8 @@ package com.abt.battery;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,14 +14,18 @@ import android.view.View;
 import com.abt.R;
 
 /**
- * 自定义水平\垂直电池控件
+ * 自定义水平电池控件
  */
 public class BatteryView extends View {
+
     private int mPower = 100;
-    private int orientation;
-    private int width;
-    private int height;
+    private boolean mCharging = false;
+    private int mOrientation;
+    private int mWidth;
+    private int mHeight;
     private int mColor;
+    private Bitmap mBatteryBackground;
+    private Bitmap mBatteryCharging;
 
     public BatteryView(Context context) {
         super(context);
@@ -29,10 +35,12 @@ public class BatteryView extends View {
         super(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Battery);
         mColor = typedArray.getColor(R.styleable.Battery_batteryColor, 0xFFFFFFFF);
-        orientation = typedArray.getInt(R.styleable.Battery_batteryOrientation, 0);
+        mOrientation = typedArray.getInt(R.styleable.Battery_batteryOrientation, 0);
         mPower = typedArray.getInt(R.styleable.Battery_batteryPower, 100);
-        width = getMeasuredWidth();
-        height = getMeasuredHeight();
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
+        mBatteryBackground = BitmapFactory.decodeResource(getResources(), R.drawable.power_empty);
+        mBatteryCharging = BitmapFactory.decodeResource(getResources(), R.drawable.power_charging);
         /**
          * recycle() :官方的解释是：回收TypedArray，以便后面重用。在调用这个函数后，你就不能再使用这个TypedArray。
          * 在TypedArray后调用recycle主要是为了缓存。当recycle被调用后，这就说明这个对象从现在可以被重用了。
@@ -41,92 +49,98 @@ public class BatteryView extends View {
         typedArray.recycle();
     }
 
-    @Override
+    /*@Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         //对View上的內容进行测量后得到的View內容占据的宽度
-        width = getMeasuredWidth();
+        mWidth = getMeasuredWidth();
         //对View上的內容进行测量后得到的View內容占据的高度
-        height = getMeasuredHeight();
+        mHeight = getMeasuredHeight();
+    }*/
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        mWidth = widthSize;
+        mHeight = heightSize;
+        if (MeasureSpec.AT_MOST == widthMode) {
+            mWidth = mBatteryBackground.getWidth();
+        }
+        if (MeasureSpec.AT_MOST == heightMode) {
+            mHeight = mBatteryBackground.getHeight();
+        }
+        setMeasuredDimension(mWidth, mHeight);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //判断电池方向    horizontal: 0   vertical: 1
-        if (orientation == 0) {
+        //判断电池方向 horizontal: 0 vertical: 1
+        if (mOrientation == 0) {
             drawHorizontalBattery(canvas);
-        } else {
-            drawVerticalBattery(canvas);
         }
     }
 
     /**
      * 绘制水平电池
-     * @param canvas
      */
     private void drawHorizontalBattery(Canvas canvas) {
+        if (mCharging) {
+            canvas.drawBitmap(mBatteryCharging, 0, 0, null);  // 将bitmap绘制到画布上
+            return;
+        }
+
         Paint paint = new Paint();
         paint.setColor(mColor);
         paint.setStyle(Paint.Style.STROKE);
-        float strokeWidth = width / 20.f;
-        float strokeWidth_2 = strokeWidth / 2;
+        float strokeWidth = mWidth / 20.f;
         paint.setStrokeWidth(strokeWidth);
-        RectF r1 = new RectF(strokeWidth_2, strokeWidth_2, width - strokeWidth - strokeWidth_2, height - strokeWidth_2);
-        //设置外边框颜色为黑色
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(r1, paint);
+
+
+        //画外边框
+        canvas.drawBitmap(mBatteryBackground, 0, 0, null);  // 将bitmap绘制到画布上
+        /*RectF r1 = new RectF(strokeWidth/2, strokeWidth/2, mWidth - strokeWidth, mHeight - strokeWidth/2);
+        paint.setColor(Color.BLACK);//设置颜色为黑色
+        canvas.drawRoundRect(r1, 2, 2, paint);*/
+
+        //画电池内矩形电量
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL);
-        //画电池内矩形电量
-        float offset = (width - strokeWidth * 2) * mPower / 100.f;
-        RectF r2 = new RectF(strokeWidth, strokeWidth + 1, offset, height - strokeWidth + 1);
-        //根据电池电量决定电池内矩形电量颜色
-        if (mPower < 30) {
+        float offset = (mWidth - strokeWidth * 2) * mPower / 100.f;
+        RectF rect= new RectF(strokeWidth + 2, strokeWidth + 2, offset, mHeight - strokeWidth - 2);
+        //RectF rect= new RectF( 2,  2, offset, mHeight - 2);
+        if (mPower < 20) {
             paint.setColor(Color.RED);
+        } else {
+            paint.setColor(Color.BLACK);
         }
-        if (mPower >= 30 && mPower < 50) {
-            paint.setColor(Color.BLUE);
-        }
-        if (mPower >= 50) {
-            paint.setColor(Color.GREEN);
-        }
-        canvas.drawRect(r2, paint);
+        canvas.drawRect(rect, paint);//根据电池电量决定电池内矩形电量颜色
+
         //画电池头
-        RectF r3 = new RectF(width - strokeWidth, height * 0.25f, width, height * 0.75f);
-        //设置电池头颜色为黑色
+        /*RectF r3 = new RectF(mWidth - strokeWidth, mHeight * 0.25f, mWidth, mHeight * 0.75f);
         paint.setColor(Color.BLACK);
-        canvas.drawRect(r3, paint);
+        canvas.drawRect(r3, paint);//设置电池头颜色为黑色*/
     }
 
     /**
-     * 绘制垂直电池
-     *
-     * @param canvas
+     * 设置电池颜色
      */
-    private void drawVerticalBattery(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(mColor);
-        paint.setStyle(Paint.Style.STROKE);
-        float strokeWidth = height / 20.0f;
-        float strokeWidth2 = strokeWidth / 2;
-        paint.setStrokeWidth(strokeWidth);
-        int headHeight = (int) (strokeWidth + 0.5f);
-        RectF rect = new RectF(strokeWidth2, headHeight + strokeWidth2, width - strokeWidth2, height - strokeWidth2);
-        canvas.drawRect(rect, paint);
-        paint.setStrokeWidth(0);
-        float topOffset = (height - headHeight - strokeWidth) * (100 - mPower) / 100.0f;
-        RectF rect2 = new RectF(strokeWidth, headHeight + strokeWidth + topOffset, width - strokeWidth, height - strokeWidth);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(rect2, paint);
-        RectF headRect = new RectF(width / 4.0f, 0, width * 0.75f, headHeight);
-        canvas.drawRect(headRect, paint);
+    public void setColor(int color) {
+        this.mColor = color;
+        invalidate();
+    }
+
+    public void setCharging(boolean charging) {
+        this.mCharging = charging;
     }
 
     /**
      * 设置电池电量
-     *
-     * @param power
      */
     public void setPower(int power) {
         this.mPower = power;
@@ -137,21 +151,10 @@ public class BatteryView extends View {
     }
 
     /**
-     * 设置电池颜色
-     *
-     * @param color
-     */
-    public void setColor(int color) {
-        this.mColor = color;
-        invalidate();
-    }
-
-    /**
      * 获取电池电量
-     *
-     * @return
      */
     public int getPower() {
         return mPower;
     }
+
 }

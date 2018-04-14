@@ -6,6 +6,7 @@
             <enum name="horizontal" value="0"/>
             <enum name="vertical" value="1"/>
         </attr>
+        <attr name="batteryBg" format="reference" />
         <attr name="batteryColor" format="color"/>
         <attr name="batteryPower" format="integer"/>
     </declare-styleable>

@@ -19,18 +19,10 @@ public class BatteryActivity extends Activity {
 //        super.onCreate(savedInstanceState);
 //
 //        setContentView(R.layout.activity_battery);
-//
-//
 //        BatteryViewOriginal2 view = (BatteryViewOriginal2) findViewById(R.id.battery);
-//
 //    }
 
-
-    private BatteryView horizontalBattery, verticalBattery;
-
-    private int power;
-
-    private Handler mHandler = new Handler() {
+/*    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -45,7 +37,10 @@ public class BatteryActivity extends Activity {
                     break;
             }
         }
-    };
+    };*/
+
+    private BatteryView horizontalBattery/*, verticalBattery*/;
+    //private int power;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +48,21 @@ public class BatteryActivity extends Activity {
         setContentView(R.layout.activity_battery);
 
         horizontalBattery = (BatteryView) findViewById(R.id.horizontalBattery);
-        verticalBattery = (BatteryView) findViewById(R.id.verticalBattery);
-
-        verticalBattery.setColor(Color.BLACK);
-        verticalBattery.setPower(85);
-
-        new Timer().schedule(new TimerTask() {
+        horizontalBattery.setColor(Color.BLACK);
+        horizontalBattery.setPower(21);
+        horizontalBattery.setCharging(false);
+    }
+/*        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 mHandler.sendEmptyMessage(0);
             }
-        }, 0, 100);
-    }
+        }, 0, 100);*/
+
+
+/*        verticalBattery = (BatteryView) findViewById(R.id.verticalBattery);
+        verticalBattery.setColor(Color.BLACK);
+        verticalBattery.setPower(85);
+    }*/
 
 }
