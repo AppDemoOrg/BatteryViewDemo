@@ -73,7 +73,6 @@ public class BatteryView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //判断电池方向 horizontal: 0 vertical: 1
         if (mOrientation == 0) {
             drawHorizontalBattery(canvas);
         }
@@ -137,13 +136,6 @@ public class BatteryView extends View {
             mPower = 100;
         }
         invalidate();//刷新VIEW
-    }
-
-    /**
-     * 获取电池电量
-     */
-    public int getPower() {
-        return mPower;
     }
 
 }

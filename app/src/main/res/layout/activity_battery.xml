@@ -14,47 +14,4 @@
         app:batteryBg="@drawable/power_empty"
         app:batteryOrientation="horizontal" />
 
-<!--    <com.abt.battery.BatteryView
-        android:id="@+id/verticalBattery"
-        android:layout_width="14dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="5dp"
-        android:background="#fff"
-        android:gravity="center"
-        app:batteryOrientation="vertical" />-->
-
-    <!--
-
-    for BatteryViewOriginal2
-
-    <com.abt.widget.BatteryView
-        android:id="@+id/battery"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        app:inside_margin="3dp"
-        app:border="4dp"
-        app:mainColor="#777"
-        app:chargingColor="@android:color/holo_blue_light"
-        app:lowPowerColor="@android:color/holo_red_dark"
-        android:layout_below="@+id/battery2"
-
-        app:batteryBackground="@drawable/power_lowest"
-        app:batteryChargeIcon="@drawable/power_charging"
-        app:batteryLevel="@drawable/power_full"
-
-        />
-
-    <com.pi.pilot.common.widget.BatteryView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:gravity="center"
-        android:layout_marginRight="@dimen/dp_6"
-        android:progress="@{toolbar.progress}"
-        app:batteryCharge="@{toolbar.isCharge}"
-        app:batteryBackground="@drawable/power_lowest"
-        app:batteryChargeIcon="@drawable/power_charging"
-        app:batteryLevel="@drawable/power_full" />-->
-
 </LinearLayout>
